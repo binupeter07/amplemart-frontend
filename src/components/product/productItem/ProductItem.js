@@ -51,8 +51,8 @@ const ProductItem = ({
       <div className={styles.content}>
         <div className={styles.details}>
           <p>
-            <span>{regularPrice > 0 && <del>${regularPrice}</del>}</span>
-            {` $${price} `}
+            <span>{regularPrice > 0 && <del>€{regularPrice}</del>}</span>
+            {`€${price} `}
           </p>
           {/* Rating */}
           <ProductRating
