@@ -20,7 +20,7 @@ import AdminOnlyRoute from "./components/adminOnlyRoute/AdminOnlyRoute";
 import Admin from "./pages/Admin/Admin";
 // import NotFound from "./pages/404/NotFound.js";
 import Product from "./pages/shop/Shop";
-import ProductDetails from "./components/product/productDetails/ProductDetails";
+import ProductDetails from "./components/product/productDetails/productDetails.js";
 import Cart from "./pages/cart/Cart";
 import CheckoutDetails from "./pages/checkout/CheckoutDetails";
 import Checkout from "./pages/checkout/Checkout";
