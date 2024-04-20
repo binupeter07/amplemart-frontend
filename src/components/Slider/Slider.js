@@ -32,9 +32,15 @@ const SimpleSlider = () => {
       {sliderData.map((slide, index) => (
      <div className="slide-wrapper">
          <div key={index} className="slide">
-          <div className="slide-image">
+          <div className="slide-image" 
+          style={{
+            display:"flex",
+            minHeight:"40vh",
+        
+          }}>
             <img src={slide.image} />
           </div>
+
           <div className="content">
             <button className="button" onClick={() => navigate("/shop")}>Shop Now</button>
           </div>

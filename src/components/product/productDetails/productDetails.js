@@ -126,7 +126,7 @@ const ProductDetails = () => {
                   <p>
                     <b>Price:</b>
                   </p>
-                  <p className={styles.price}>{`$${product?.price}`}</p>
+                  <p className={styles.price}>{`€${product?.price}`}</p>
                 </div>
                 <div className={styles.property}>
                   <p>

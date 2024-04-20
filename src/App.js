@@ -32,11 +32,12 @@ import CheckoutPaypal from "./pages/checkout/CheckoutPaypal.js";
 import { AnimatePresence } from "framer-motion";
 import ChangePassword from "./pages/ChangePassword/ChangePassword.js";
 import ResetPassword from "./pages/resetPassword/ResetPassword.js";
+import ContactPage from "./pages/Contact/Contact.js";
 
 axios.defaults.withCredentials = true;
 // Deploy
 
-function App() {
+const App = () => {
   const location = useLocation();
   const dispatch = useDispatch();
   const isLoggedIn = useSelector(selectIsLoggedIn);
@@ -58,6 +59,7 @@ function App() {
       <ToastContainer />
       <Header />
       <AnimatePresence>
+      <div style={{minHeight:"calc(100vh - 8.8rem)"}}>
         <Routes location={location} key={location.pathname}>
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
@@ -88,9 +90,11 @@ function App() {
           <Route path="/order-details/:id" element={<OrderDetails />} />
 
           <Route path="/review-product/:id" element={<ReviewProducts />} />
+          <Route path="/contact" element={<ContactPage />} />
 
           <Route path="*" element={<NotFound />} />
         </Routes>
+        </ div >
       </AnimatePresence>
       <Footer />
     </>
