@@ -4,7 +4,7 @@ import Card from "../../components/card/Card";
 import { toast } from "react-toastify";
 import { useDispatch } from "react-redux";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
-// import { resetpassword } from "../../redux/features/auth/authSlice";
+import { resetpassword } from "../../redux/features/auth/authSlice";
 
 const ResetPassword = () => {
   const location = useLocation();
