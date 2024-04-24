@@ -27,7 +27,7 @@ const activeLink = ({ isActive }) => (isActive ? `${styles.active}` : "");
 
 const Header = () => {
   const [showMenu, setShowMenu] = useState(false);
-  const [scrollPage, setScrollPage] = useState(true);
+  const [scrollPage, setScrollPage] = useState(false);
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
