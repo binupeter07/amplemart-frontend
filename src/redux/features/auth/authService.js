@@ -23,7 +23,6 @@ const login = async (userData) => {
   const response = await axios.post(API_URL + "login", userData, {
     withCredentials: true,
   });
-
   return response.data;
 };
 
@@ -144,6 +143,18 @@ export const sendContactMail = async (userData) => {
   return response.data;
 };
 
+// Send OTP to user's email
+const sendOTP = async (email) => {
+  const response = await axios.post(API_URL + "send-otp", { email });
+  return response.data;
+};
+
+// Verify OTP provided by the user
+const verifyOTP = async (email, otp) => {
+  const response = await axios.post(API_URL + "verify-otp", { email, otp });
+  return response.data;
+};
+
 const authService = {
   register,
   login,
@@ -164,6 +175,8 @@ const authService = {
   loginWithCode,
   loginWithGoogle,
   changeStatus,
+  sendOTP,
+  verifyOTP,
 };
 
 export default authService;

@@ -6,62 +6,94 @@ import { Link, useNavigate } from "react-router-dom";
 import Loader from "../../components/Loader/Loader";
 import { toast } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
-import { validateEmail } from "../../redux/features/auth/authService";
-import { RESET_AUTH, register } from "../../redux/features/auth/authSlice";
+import { validateEmail } from "../../redux/features/auth/authService"; 
+import { RESET_AUTH, register, sendOTP, verifyOTP } from "../../redux/features/auth/authSlice";
 
 const initialState = {
   name: "",
   email: "",
   password: "",
   cPassword: "",
+  otp: "",
 };
 
 const Register = () => {
   const [formData, setFormData] = useState(initialState);
-  const { name, email, password, cPassword } = formData;
+  const { name, email, password, cPassword, otp } = formData;
 
-  const { isLoading, isLoggedIn, isSuccess, message } = useSelector(
-    (state) => state.auth
-  );
+  const {
+    isLoading,
+    isLoggedIn,
+    isSuccess,
+    isOTPSending,
+    isOTPVerifying,
+    isOTPVerified,
+  } = useSelector((state) => state.auth);
+  const [isOtpSent, setIsOtpSent] = useState(false);
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+    setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const registerUser = async (e) => {
-    e.preventDefault();
-    if (!email || !password) {
-      return toast.error("All fields are required");
+  const sendOTPToUser = async () => {
+    if (!email || !validateEmail(email)) {
+      toast.error("Please enter a valid email");
+      return;
     }
-    if (password.length < 6) {
-      return toast.error("Password must be up to 6 characters");
+
+    try {
+      await dispatch(sendOTP(email));
+      setIsOtpSent(true);
+      toast.success("OTP sent successfully");
+    } catch (error) {
+      toast.error(`Error sending OTP: ${error.message || "Unknown error"}`);
     }
-    if (!validateEmail(email)) {
-      return toast.error("Please enter a valid email");
+  };
+
+  const verifyOTPFromUser = async () => {
+    if (!email || !otp) {
+      toast.error("Please enter your email and OTP");
+      return;
+    }
+
+    try {
+      await dispatch(verifyOTP({ email, otp }));
+      toast.success("OTP verified!");
+      registerUser();
+    } catch (error) {
+      toast.error(`Invalid OTP: ${error.message || "Unknown error"}`);
+    }
+  };
+
+  const registerUser = async () => {
+    if (!name || !email || !password || !cPassword) {
+      toast.error("All fields are required");
+      return;
     }
     if (password !== cPassword) {
-      toast.error("Passwords do not match.");
+      toast.error("Passwords do not match");
+      return;
     }
-    const userData = {
-      name,
-      email,
-      password,
-    };
+    if (password.length < 6) {
+      toast.error("Password must be at least 6 characters long");
+      return;
+    }
 
-    console.log(userData);
-    await dispatch(register(userData));
+    const userData = { name, email, password };
+    dispatch(register(userData));
   };
 
   useEffect(() => {
     if (isSuccess && isLoggedIn) {
       navigate("/");
     }
-
-    dispatch(RESET_AUTH());
-  }, [isLoggedIn, isSuccess, dispatch, navigate]);
+    return () => {
+      dispatch(RESET_AUTH());
+    };
+  }, [isLoggedIn, isSuccess, navigate, dispatch]);
 
   return (
     <>
@@ -70,7 +102,6 @@ const Register = () => {
         <Card>
           <div className={styles.form}>
             <h2>Register</h2>
-
             <form onSubmit={registerUser}>
               <input
                 type="text"
@@ -104,13 +135,48 @@ const Register = () => {
                 value={cPassword}
                 onChange={handleInputChange}
               />
-              <button type="submit" className="--btn --btn-primary --btn-block">
+
+              {isOtpSent ? (
+                <>
+                  <input
+                    type="text"
+                    placeholder="Enter OTP"
+                    required
+                    name="otp"
+                    value={otp}
+                    onChange={handleInputChange}
+                  />
+                  <button
+                    type="button"
+                    className="--btn --btn-primary --btn-block"
+                    onClick={verifyOTPFromUser}
+                    disabled={isOTPVerifying}
+                  >
+                    {isOTPVerifying ? "Verifying OTP..." : "Verify OTP"}
+                  </button>
+                </>
+              ) : (
+                <button
+                  type="button"
+                  className="--btn --btn-primary --btn-block"
+                  onClick={sendOTPToUser}
+                  disabled={isOTPSending}
+                >
+                  {isOTPSending ? "Sending OTP..." : "Send OTP"}
+                </button>
+              )}
+
+              <button
+                type="submit"
+                className="--btn --btn-primary --btn-block"
+                disabled={isOTPVerifying || !isOTPVerified}
+              >
                 Register
               </button>
             </form>
 
             <span className={styles.register}>
-              <p>Already an account?</p>
+              <p>Already have an account?</p>
               <Link to="/login">Login</Link>
             </span>
           </div>
@@ -124,3 +190,5 @@ const Register = () => {
 };
 
 export default Register;
+
+
