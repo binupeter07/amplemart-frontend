@@ -65,7 +65,7 @@ const OrderHistory = () => {
                         </td>
                         <td>{_id}</td>
                         <td>
-                          {"$"}
+                          {"€"}
                           {orderAmount}
                         </td>
                         <td>
